@@ -6,24 +6,21 @@ import com.portrabbit.spellsurvival.render.item.InventoryItemRenderer;
 public class Slot{
 	
 	private ItemStack stack;
-	private InventoryItemRenderer itemRender;
-	private float x, y;
+	private int id;
 	
-	public Slot(float x, float y) {
-		itemRender = new InventoryItemRenderer();
-		this.x = x;
-		this.y = y;
+	public Slot(int id) {
+		this.id = id;
 	}
 	
 	public ItemStack getStack(){
 		return stack;
 	}
 	
-	public float getX(){
-		return x;
+	public int getId(){
+		return this.id;
 	}
 	
-	public float getY(){
-		return y;
+	public void setStack(ItemStack stack){
+		this.stack = stack;
 	}
 }

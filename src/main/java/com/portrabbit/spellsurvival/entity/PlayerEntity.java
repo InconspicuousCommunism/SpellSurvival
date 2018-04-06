@@ -2,25 +2,43 @@ package com.portrabbit.spellsurvival.entity;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_I;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import com.portrabbit.spellsurvival.SpellSurvival;
 import com.portrabbit.spellsurvival.collision.AABB;
-import com.portrabbit.spellsurvival.collision.Collision;
+import com.portrabbit.spellsurvival.gui.GUI;
+import com.portrabbit.spellsurvival.gui.player.PlayerInventoryGUI;
+import com.portrabbit.spellsurvival.inventory.Inventory;
+import com.portrabbit.spellsurvival.item.Item;
+import com.portrabbit.spellsurvival.item.ItemEntity;
+import com.portrabbit.spellsurvival.item.ItemStack;
 import com.portrabbit.spellsurvival.render.Camera;
 import com.portrabbit.spellsurvival.world.World;
 
 public class PlayerEntity extends Entity{
 
 	private Camera cam;
+	private Inventory playerInv;
+	private GUI openedGui;
 	
 	public PlayerEntity(float posX, float posY, Camera cam) {
 		super(posX, posY, "character.png");
 		this.cam = cam;
 		boundingBox = new AABB(new Vector2f(transform.getPos().x, transform.getPos().y), new Vector2f(1f,1f));
 		inAir = true;
+		playerInv = new Inventory(48);
+		playerInv.setSlotStack(new ItemStack(Item.COAL), 0);
+		playerInv.setSlotStack(new ItemStack(Item.GOLD_ORE), 1);
+		playerInv.setSlotStack(new ItemStack(Item.IRON_ORE), 2);
+		playerInv.setSlotStack(new ItemStack(Item.LEATHER), 3);
+		playerInv.setSlotStack(new ItemStack(Item.PLYWOOD), 4);
+		playerInv.setSlotStack(new ItemStack(Item.STICK), 5);
+		playerInv.setSlotStack(new ItemStack(Item.STONE), 6);
+		playerInv.setSlotStack(new ItemStack(Item.WOOD), 7);
 	}
 
 	@Override
@@ -30,61 +48,53 @@ public class PlayerEntity extends Entity{
 		if(world.getInput().isKeyDown(GLFW_KEY_SPACE) && !inAir)mY = .15f;
 		super.update(world);
 		
-		boundingBox.getCenter().set(transform.getPos().x, transform.getPos().y);
+		collideWithWorld(world);
 		
-		AABB[] boxes = new AABB[36];
-		for(int x = -2; x < 3; x++){
-			for(int y = -2; y < 3; y++){
-				boxes[(x+2) + (y+2) * 5] = world.getBoundsAt((int)transform.getPos().x + x, (int)-transform.getPos().y + y);
-			}
-		}
-		AABB box = null;
-		for(int i = 0; i < boxes.length; i++){
-			if(boxes[i] != null){
-				if(box == null) box = boxes[i];
-				Vector2f len1 = box.getCenter().sub(transform.getPos().x, transform.getPos().y, new Vector2f());
-				Vector2f len2 = boxes[i].getCenter().sub(transform.getPos().x, transform.getPos().y, new Vector2f());
-				
-				if(len1.lengthSquared() > len2.lengthSquared()){
-					box = boxes[i];
-				}
-			}
-		}
-		if(box != null){
-			Collision data = this.boundingBox.getCollision(box);
-			if(data.isIntersecting()){
-				this.boundingBox.correctPosition(box, data);
-				transform.setPos(new Vector3f(boundingBox.getCenter(), 0));
-				this.inAir = false;
-			}else{
-				this.inAir = true;
-			}
-			for(int i = 0; i < boxes.length; i++){
-				if(boxes[i] != null){
-					if(box == null) box = boxes[i];
-					Vector2f len1 = box.getCenter().sub(transform.getPos().x, transform.getPos().y, new Vector2f());
-					Vector2f len2 = boxes[i].getCenter().sub(transform.getPos().x, transform.getPos().y, new Vector2f());
-					
-					if(len1.lengthSquared() > len2.lengthSquared()){
-						box = boxes[i];
+		if(this.playerInv.hasEmptySlot()){
+			AABB box = this.getBoundingBox();
+			for(Entity e : World.world.getEntityList()){
+				if(e instanceof ItemEntity){
+					ItemEntity item = (ItemEntity) e;
+					AABB itemBox = e.getBoundingBox();
+					if(item.canBePickedUp()){
+						if(box.getCollision(itemBox).isIntersecting()){
+							this.playerInv.addToNextSlot(item.getItemStack());
+							World.world.removeEntity(e);
+						}
 					}
 				}
-			}
-			data = this.boundingBox.getCollision(box);
-			if(data.isIntersecting()){
-				this.boundingBox.correctPosition(box, data);
-				transform.setPos(new Vector3f(boundingBox.getCenter(), 0));
 			}
 		}
 		
 		cam.setPos(this.getTransformation().getPos().mul(-this.getTransformation().getScale().x, new Vector3f()));
 		
+		if(SpellSurvival.instance.getWindow().getInput().isKeyPressed(GLFW_KEY_I)){
+			if(!isGuiOpened())
+				openInventory();
+			else closeCurrentGui();
+		}
 	}
 	
 	@Override
 	public void move(float posX, float posY) {
 		super.move(posX, posY);
-		
+	}
+	
+	public boolean isGuiOpened(){
+		return openedGui != null;
+	}
+	
+	public void renderOpenedGui(Camera cam){
+		openedGui.renderGUI(cam);
+	}
+	
+	public void openInventory(){
+		this.openedGui = new PlayerInventoryGUI(this.playerInv);
+	}
+	
+	public void closeCurrentGui(){
+		this.openedGui.close();
+		this.openedGui = null;
 	}
 
 }

@@ -44,4 +44,12 @@ public class TileLocation {
 		return bounds;
 	}
 	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
 }

@@ -45,14 +45,16 @@ public class Chunk {
 		}
 	}
 	
-	public void renderChunk(TileRenderer renderer, Shader shader, World world, Camera camera, int centerY){
+	public void renderChunk(TileRenderer renderer, Shader shader, World world, Camera camera, int originX, int centerY){
 		for(TileLocation[] tl : tileMap){
-			for(int y = -48; y < 48; y++){
-				int ay = centerY + y;
-				if(ay >= 0 && ay < tl.length){
-					TileLocation t = tl[ay];
-					if(t != null)
-						t.renderTile(renderer, shader, world, camera);
+			if(Math.abs((tl[1] == null ? 0 : tl[1].getX()) - originX) < 27){
+				for(int y = -25; y < 25; y++){
+					int ay = centerY + y;
+					if(ay >= 0 && ay < tl.length){
+						TileLocation t = tl[ay];
+						if(t != null)
+							t.renderTile(renderer, shader, world, camera);
+					}
 				}
 			}
 		}

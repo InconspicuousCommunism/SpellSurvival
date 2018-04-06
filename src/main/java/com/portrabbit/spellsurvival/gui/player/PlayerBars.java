@@ -2,7 +2,6 @@ package com.portrabbit.spellsurvival.gui.player;
 
 import org.joml.Vector3f;
 
-import com.portrabbit.spellsurvival.SpellSurvival;
 import com.portrabbit.spellsurvival.gui.GUIElement;
 import com.portrabbit.spellsurvival.render.Camera;
 import com.portrabbit.spellsurvival.render.Shader;

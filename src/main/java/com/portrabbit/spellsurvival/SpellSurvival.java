@@ -18,11 +18,14 @@ import static org.lwjgl.opengl.GL11.glDepthRange;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.util.ArrayList;
+
 import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
+import com.portrabbit.spellsurvival.entity.Entity;
 import com.portrabbit.spellsurvival.entity.PlayerEntity;
 import com.portrabbit.spellsurvival.gui.MainMenu;
 import com.portrabbit.spellsurvival.gui.player.PlayerGUI;
@@ -159,6 +162,9 @@ public class SpellSurvival {
 					player.update(World.world);
 					player.renderEntity(World.world);
 					playerGUI.renderGUI(menuCam);
+					if(player.isGuiOpened()){
+						player.renderOpenedGui(menuCam);
+					}
 					break;
 				case MAIN_MENU:
 					mainMenu.renderGUI(menuCam);
@@ -199,6 +205,10 @@ public class SpellSurvival {
 	
 	public enum GameState {
 		MAIN_MENU, IN_WORLD
+	}
+	
+	public PlayerEntity getPlayer(){
+		return this.player;
 	}
 	
 }

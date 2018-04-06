@@ -5,6 +5,7 @@ import com.portrabbit.spellsurvival.item.Item;
 import com.portrabbit.spellsurvival.render.Camera;
 import com.portrabbit.spellsurvival.render.Model;
 import com.portrabbit.spellsurvival.render.Shader;
+import com.portrabbit.spellsurvival.render.Texture;
 
 public class InventoryItemRenderer {
 	
@@ -27,11 +28,22 @@ public class InventoryItemRenderer {
 		itemModel = new Model(verts,texture,indicies);
 	}
 	
-	public void render(Item item, Shader s, Transform trans, Camera cam){
+	public void bindShader(Shader s){
 		s.bind();
+		s.setUniform("sampler", 0);
+	}
+	
+	public void render(Item item, Shader s, Transform trans, Camera cam){
 		item.getTexture().bind();
 		
-		s.setUniform("sampler", 0);
+		s.setUniform("projection", trans.getProjection(cam.getProjection()));
+		
+		itemModel.render();
+	}
+	
+	public void render(Texture t, Shader s, Transform trans, Camera cam){
+		t.bind();
+		
 		s.setUniform("projection", trans.getProjection(cam.getProjection()));
 		
 		itemModel.render();

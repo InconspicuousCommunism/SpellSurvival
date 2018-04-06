@@ -3,9 +3,7 @@ package com.portrabbit.spellsurvival.gui.player;
 import org.joml.Vector3f;
 
 import com.portrabbit.spellsurvival.SpellSurvival;
-import com.portrabbit.spellsurvival.entity.PlayerEntity;
 import com.portrabbit.spellsurvival.gui.GUI;
-import com.portrabbit.spellsurvival.gui.GUIElement;
 import com.portrabbit.spellsurvival.render.Texture;
 
 public class PlayerGUI extends GUI{

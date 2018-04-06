@@ -73,7 +73,6 @@ public class TileRenderer {
 		cam.getProjection().mul(world.getWorldScale(), target);
 		target.mul(tile_pos);
 		
-		shader.setUniform("sampler", 0);
 		shader.setUniform("projection", target);
 		
 		tileModel.doRender();
@@ -85,7 +84,6 @@ public class TileRenderer {
 		Transform trans = new Transform();
 		trans.setScale(new Vector3f(4,4,0));
 		
-		s.setUniform("sampler", 0);
 		s.setUniform("projection", new Matrix4f().scale(1920f/1000f * 2f,2f,2f));
 		
 		backdropModel.render();
@@ -94,6 +92,7 @@ public class TileRenderer {
 	
 	public void prepareRendering(Shader s){
 		tileModel.prepare();
+		s.setUniform("sampler", 0);
 	}
 	
 	public void finishRendering(){

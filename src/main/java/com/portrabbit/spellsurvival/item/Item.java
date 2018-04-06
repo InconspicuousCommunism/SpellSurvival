@@ -6,13 +6,13 @@ import com.portrabbit.spellsurvival.render.Texture;
 
 public class Item {
 	
-	private static final String RESOURCE_LOCATION = "src/main/resources/item/";
+	private static final String RESOURCE_LOCATION = "src/main/resources/items/";
 	
 	private static ArrayList<Item> items = new ArrayList<Item>();
 
 	public static Item COAL = new Item("coal.png");
 	public static Item GOLD_ORE = new Item("gold_ore.png");
-	public static Item IRON_ORE = new Item("iron_ore");
+	public static Item IRON_ORE = new Item("iron_ore.png");
 	public static Item LEATHER = new Item("leather.png");
 	public static Item WOOD = new Item("wood.png");
 	public static Item PLYWOOD = new Item("plywood.png");
@@ -23,7 +23,7 @@ public class Item {
 	private int tId;
 	
 	public Item(String tLoc){
-		this.texture = Texture.loadTexture(RESOURCE_LOCATION + tLoc);
+		this.texture = Texture.loadTexture("src/main/resources/items/" + tLoc);
 		tId = getNextUnassignedId();
 		items.add(this);
 	}
