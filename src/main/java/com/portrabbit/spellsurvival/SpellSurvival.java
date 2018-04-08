@@ -38,7 +38,8 @@ public class SpellSurvival {
 	
 	public static SpellSurvival instance;
 	
-	public static final int GAME_SCALE = 32;
+	public static final int GAME_SCALE = 44;
+	public static final int MENU_SCALE = 32;
 	public static final double FRAME_LIMIT = 1/120.0;
 	
 	private GameState state;

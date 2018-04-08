@@ -1,5 +1,7 @@
 package com.portrabbit.spellsurvival.item;
 
+import com.portrabbit.spellsurvival.world.tile.Tile;
+
 public class ItemStack {
 	
 	private Item item;
@@ -7,6 +9,14 @@ public class ItemStack {
 	
 	public ItemStack(Item item) {
 		this(item, 1);
+	}
+	
+	public ItemStack(Tile t){
+		this(t, 1);
+	}
+	
+	public ItemStack(Tile t, int amount){
+		this(t.getTileItem(), amount);
 	}
 	
 	public ItemStack(Item item, int amount) {
@@ -29,7 +39,19 @@ public class ItemStack {
 	 */
 	public boolean decreaseStack(int amount){
 		this.amount-=amount;
+		return shouldBeRemoved();
+	}
+	
+	public void setStackAmount(int amount){
+		this.amount = amount;
+	}
+	
+	public boolean shouldBeRemoved(){
 		return this.amount <= 0;
+	}
+	
+	public void worldClicked(float mX, float mY, int type){
+		this.item.onClickInWorld(mX, mY, type, this);
 	}
 	
 }

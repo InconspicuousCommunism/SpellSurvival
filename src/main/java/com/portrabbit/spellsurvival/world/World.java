@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.portrabbit.spellsurvival.collision.AABB;
 import com.portrabbit.spellsurvival.entity.Entity;
+import com.portrabbit.spellsurvival.item.ItemEntity;
+import com.portrabbit.spellsurvival.item.ItemStack;
 import com.portrabbit.spellsurvival.render.Camera;
 import com.portrabbit.spellsurvival.render.Input;
 import com.portrabbit.spellsurvival.render.Shader;
@@ -173,6 +175,19 @@ public class World {
 		}
 		this.addEntityList.clear();
 		this.removeEntityList.clear();
+	}
+	
+	public TileRenderer getTileRenderer(){
+		return this.renderer;
+	}
+	
+	public void breakTile(int x, int y){
+		Tile t = this.getTileAt(x, y);
+		if(t != null){
+			this.setTile(x, y, null);
+			ItemEntity item = new ItemEntity(x, y, new ItemStack(t.getTileItem()));
+			this.addEntity(item);
+		}
 	}
 	
 }

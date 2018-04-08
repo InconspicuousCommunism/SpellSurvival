@@ -35,7 +35,7 @@ public class Chunk {
 			for(int x = 0; x < size; x++){
 				for(int y = 0; y < tileMap[x].length; y++){
 					tileMap[x+15][y] = new TileLocation(startX + x, y);
-				}
+				} 
 			}
 			for(int x = 0; x < size; x++){
 				for(int y = 0; y < tileMap[x].length; y++){
@@ -47,7 +47,7 @@ public class Chunk {
 	
 	public void renderChunk(TileRenderer renderer, Shader shader, World world, Camera camera, int originX, int centerY){
 		for(TileLocation[] tl : tileMap){
-			if(Math.abs((tl[1] == null ? 0 : tl[1].getX()) - originX) < 27){
+			if(Math.abs((tl[1] == null ? 0 : tl[1].getX()) - originX) < 28){
 				for(int y = -25; y < 25; y++){
 					int ay = centerY + y;
 					if(ay >= 0 && ay < tl.length){

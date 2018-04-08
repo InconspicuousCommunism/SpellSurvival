@@ -28,6 +28,8 @@ public class InventoryGUI extends GUI{
 	private static final Texture hoverTexture = Texture.loadTexture(GUI.RESOURCE_LOCATION + "hover_image.png");
 	private ItemStack heldItem;
 	
+	protected float startX, startY, endX, endY;
+	
 	private HashMap<Integer, Vector3f> slotPos = new HashMap<Integer, Vector3f>();
 	
 	public InventoryGUI(Inventory inv) {
@@ -57,7 +59,7 @@ public class InventoryGUI extends GUI{
 		if(input.isKeyPressed(GLFW.GLFW_KEY_Q)){
 			drop = true;
 		}
-		Transform trans = new Transform().setScale(new Vector3f(1f,1f,1f)).setAfterScale(new Vector3f(SpellSurvival.GAME_SCALE * 2.5f, SpellSurvival.GAME_SCALE * 2.5f, 1f));
+		Transform trans = new Transform().setScale(GUIElement.DEFAULT_SCALE).setAfterScale(new Vector3f(SpellSurvival.MENU_SCALE * 2.5f, SpellSurvival.MENU_SCALE * 2.5f, 1f));
 		for(Slot s : inv.slots){
 			if(s != null){
 				Vector3f pos = slotPos.getOrDefault(s.getId(), new Vector3f(0f,0f,0f));
@@ -82,6 +84,13 @@ public class InventoryGUI extends GUI{
 				}
 			}
 		}
+		if((mX < this.startX || mX > this.endX || mY < this.startY || mY > this.endY) && this.heldItem != null){
+			if(clicked){
+				this.heldItem.worldClicked(mX, mY, 0);
+				if(this.heldItem.shouldBeRemoved())this.heldItem = null;
+			}
+			trans.setAfterScale(new Vector3f(SpellSurvival.MENU_SCALE * 1f, SpellSurvival.MENU_SCALE * 1f, 1f));
+		}
 		if(heldItem != null){
 			trans.setPos(new Vector3f(mX, mY, 0f));
 			itemRenderer.render(heldItem.getItem(), this.s, trans, cam);
@@ -96,9 +105,13 @@ public class InventoryGUI extends GUI{
 	}
 	
 	public void renderGUI(Texture texture, float xPos, float yPos, float width, float height, float scale, Camera cam){
+		this.startX = (xPos - width/2f)/2f;
+		this.startY = (yPos - height/2f)/2f;
+		this.endX = (xPos + width/2f)/2f;
+		this.endY = (yPos + height/2f)/2f;
 		if(render == null)
 			render = new GUIRenderer(width, height);
-		render.render(texture, s, new Transform().setScale(new Vector3f(1f,1f,1f)).setPos(new Vector3f(xPos, yPos, 0)).setAfterScale(new Vector3f(SpellSurvival.GAME_SCALE * scale, SpellSurvival.GAME_SCALE * scale, 1f)), cam);
+		render.render(texture, s, new Transform().setScale(GUIElement.DEFAULT_SCALE).setPos(new Vector3f(xPos, yPos, 0)).setAfterScale(new Vector3f(SpellSurvival.MENU_SCALE * scale, SpellSurvival.MENU_SCALE * scale, 1f)), cam);
 	}
 	
 	public void registerSlot(int id, float xPos, float yPos){

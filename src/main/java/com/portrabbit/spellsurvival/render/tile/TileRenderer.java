@@ -29,12 +29,6 @@ public class TileRenderer {
 				.5f, -.5f,
 				.5f, .5f
 		};
-		float[] verts2 = new float[] {
-				-1f, 1f,
-				-1f, -1f,
-				1f, -1f,
-				1f, 1f
-		};
 		float[] texture = new float[] {
 				0,1,
 				0,0,
@@ -46,22 +40,22 @@ public class TileRenderer {
 		backdropModel = new Model(verts,texture,indicies);
 	}
 	
-	public void QueueTile(Tile t, float x, float y, float z){
+	public void QueueTile(Tile t, float x, float y){
 		if(t != null){
 			if(!textureRenders.containsKey(t.getTexture()))textureRenders.put(t.getTexture(), new HashMap<Vector3f, Tile>());
-			textureRenders.get(t.getTexture()).put(new Vector3f(x,y,z), t);
+			textureRenders.get(t.getTexture()).put(new Vector3f(x,y,0f), t);
 		}
 	}
 	
 	public void renderTiles(Shader shader, World world, Camera cam){
 		for(Texture t : textureRenders.keySet()){
 			for(Vector3f v : textureRenders.get(t).keySet()){
-				renderTile(textureRenders.get(t).get(v), v.x, v.y, v.z, shader, world, cam);
+				renderTile(textureRenders.get(t).get(v), v.x, v.y, shader, world, cam);
 			}
 		}
 	}
 	
-	public void renderTile(Tile tile, float x, float y, float z, Shader shader, World world, Camera cam){
+	public void renderTile(Tile tile, float x, float y, Shader shader, World world, Camera cam){
 		if(lastText == null || lastText != tile.getTexture()){
 			tile.bindTileTexture();
 			lastText = tile.getTexture();
@@ -76,6 +70,21 @@ public class TileRenderer {
 		shader.setUniform("projection", target);
 		
 		tileModel.doRender();
+	}
+	
+	public void renderOverTile(Texture texture, float x, float y, Shader shader, World world, Camera cam){
+		shader.bind();
+		texture.bind();
+		
+		Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x, y, 0));
+		Matrix4f target = new Matrix4f();
+		
+		cam.getProjection().mul(world.getWorldScale(), target);
+		target.mul(tile_pos);
+		
+		shader.setUniform("projection", target);
+		
+		tileModel.render();
 	}
 	
 	public void renderBackdrop(Texture backdrop, Shader s, Camera cam){

@@ -22,13 +22,13 @@ public class TileLocation {
 	
 	public void setTile(Tile t){
 		this.tile = t;
-		if(t.isSolid()){
+		if(t != null && t.isSolid()){
 			bounds = new AABB(new Vector2f(x, y), new Vector2f(.5f,.5f));
 		}else bounds = null;
 	}
 
 	public void renderTile(TileRenderer renderer, Shader shader, World world, Camera camera) {
-		renderer.QueueTile(tile, x, y, 0);
+		renderer.QueueTile(tile, x, y);
 	}
 
 	public Tile getTile() {

@@ -22,10 +22,14 @@ public class Item {
 	private Texture texture;
 	private int tId;
 	
-	public Item(String tLoc){
-		this.texture = Texture.loadTexture("src/main/resources/items/" + tLoc);
+	public Item(Texture texture){
+		this.texture = texture;
 		tId = getNextUnassignedId();
 		items.add(this);
+	}
+	
+	public Item(String tLoc){
+		this(Texture.loadTexture("src/main/resources/items/" + tLoc));
 	}
 	
 	public static int getNextUnassignedId(){
@@ -43,5 +47,7 @@ public class Item {
 	public Texture getTexture(){
 		return this.texture;
 	}
+	
+	public void onClickInWorld(float mX, float mY, int type, ItemStack stack){}
 	
 }

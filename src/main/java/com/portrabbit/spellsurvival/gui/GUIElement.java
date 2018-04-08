@@ -18,6 +18,9 @@ public abstract class GUIElement {
 	protected Transform trans;
 	private int id = -1;
 	
+	public static final Vector3f DEFAULT_AFTER_SCALE = new Vector3f(2 * SpellSurvival.MENU_SCALE,2 * SpellSurvival.MENU_SCALE,1);
+	public static final Vector3f DEFAULT_SCALE = new Vector3f(1f,1f,1f);
+	
 	public GUIElement(Texture texture, float x, float y, int width, int height) {
 		this.x = x;
 		this.y = y;
@@ -25,7 +28,7 @@ public abstract class GUIElement {
 		this.width = width;
 		this.texture = texture;
 		renderer = new GUIRenderer(width, height);
-		this.trans = new Transform().setScale(new Vector3f(1,1f,1)).setAfterScale(new Vector3f(2 * SpellSurvival.GAME_SCALE,2 * SpellSurvival.GAME_SCALE,1)).setPos(new Vector3f(x,y,0));
+		this.trans = new Transform().setScale(DEFAULT_SCALE).setAfterScale(DEFAULT_AFTER_SCALE).setPos(new Vector3f(x,y,0));
 	}
 	
 	public void renderElement(Shader s, Camera cam){
